@@ -35,8 +35,8 @@ public class EuclideanDistanceMeasure extends SquaredEuclideanDistanceMeasure {
     return Math.sqrt(super.distance(v1, v2));
   }
   
-  @Override
-  public double distance(double centroidLengthSquare, Vector centroid, Vector v) {
-    return Math.sqrt(super.distance(centroidLengthSquare, centroid, v));
-  }
+//  @Override
+//  public double distance(double centroidLengthSquare, Vector centroid, Vector v) {
+//    return Math.sqrt(super.distance(centroidLengthSquare, centroid, v));
+//  }
 }

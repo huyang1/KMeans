@@ -32,12 +32,12 @@ public class SquaredEuclideanDistanceMeasure implements DistanceMeasure {
 
   @Override
   public double distance(Vector v1, Vector v2) {
-    return v2.getDistanceSquared(v1);
+    return v2.minus(v1).times().zSum();
   }
 
-  @Override
-  public double distance(double centroidLengthSquare, Vector centroid, Vector v) {
-    return centroidLengthSquare - 2 * v.dot(centroid) + v.getLengthSquared();
-  }
+//  @Override
+//  public double distance(double centroidLengthSquare, Vector centroid, Vector v) {
+//    return centroidLengthSquare - 2 * v.dot(centroid) + v.getLengthSquared();
+//  }
 }
 

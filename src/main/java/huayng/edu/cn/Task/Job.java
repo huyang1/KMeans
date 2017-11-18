@@ -1,5 +1,8 @@
 package huayng.edu.cn.Task;
 
+import huayng.edu.cn.HadoopUtil;
+import huayng.edu.cn.RandomSeedGenerator;
+import huayng.edu.cn.conversion.InputDriver;
 import huayng.edu.cn.distance.DistanceMeasure;
 import huayng.edu.cn.distance.EuclideanDistanceMeasure;
 import org.apache.hadoop.conf.Configuration;
@@ -27,19 +30,20 @@ public class Job {
                            double convergenceDelta, int maxIterations) throws Exception {
         Path directoryContainingConvertedInput = new Path(output, DIRECTORY_CONTAINING_CONVERTED_INPUT);
         log.info("Preparing Input");
-        //InputDriver.runJob(input, directoryContainingConvertedInput, "org.apache.mahout.math.RandomAccessSparseVector");//将输入文件序列化
+        HadoopUtil.delete(conf, directoryContainingConvertedInput);
+        InputDriver.runJob(input, directoryContainingConvertedInput, "org.apache.mahout.math.RandomAccessSparseVector");//将输入文件序列化
         log.info("Running random seed to get initial clusters");
-        Path clusters = new Path(output, "random-seeds");
+        Path clusters = new Path(output, "random-generator-seeds");
         clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
-        log.info("Running KMeans with k = {}", k);//暂时不做input file sequence
-        KMeansDriver.run(conf, input, clusters, output, convergenceDelta,
-                maxIterations, true, 0.0, false);
-        // run ClusterDumper
-        Path outGlob = new Path(output, "clusters-*-final");
-        Path clusteredPoints = new Path(output,"clusteredPoints");
-        log.info("Dumping out clusters from clusters: {} and clusteredPoints: {}", outGlob, clusteredPoints);
-        ClusterDumper clusterDumper = new ClusterDumper(outGlob, clusteredPoints);
-        clusterDumper.printClusters(null);
+        log.info("Running KMeans with k = {}", k);
+//        KMeansDriver.run(conf, input, clusters, output, convergenceDelta,
+//                maxIterations, true, 0.0, false);
+//        // run ClusterDumper
+//        Path outGlob = new Path(output, "clusters-*-final");
+//        Path clusteredPoints = new Path(output,"clusteredPoints");
+//        log.info("Dumping out clusters from clusters: {} and clusteredPoints: {}", outGlob, clusteredPoints);
+//        ClusterDumper clusterDumper = new ClusterDumper(outGlob, clusteredPoints);
+//        clusterDumper.printClusters(null);
     }
 
 
