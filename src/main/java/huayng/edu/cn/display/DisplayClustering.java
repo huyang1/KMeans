@@ -1,20 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package huayng.edu.cn.display;
 
 import huayng.edu.cn.*;
@@ -25,7 +8,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.slf4j.Logger;
@@ -58,12 +40,7 @@ public class DisplayClustering extends Frame {
   
   static final Color[] COLORS = { Color.red, Color.orange, Color.yellow, Color.green, Color.blue, Color.magenta,
     Color.lightGray };
-  
-  protected static final double T1 = 3.0;
-  
-  protected static final double T2 = 2.8;
-  
-  static double significance = 0.05;
+
   
   protected static int res; // screen resolution
   
@@ -119,8 +96,9 @@ public class DisplayClustering extends Frame {
   protected static void plotSampleParameters(Graphics2D g2) {
     Vector v = new DenseVector(2);
     Vector dv = new DenseVector(2);
-    g2.setColor(Color.RED);
+    int cx = COLORS.length - 1;
     for (DenseVector param : SAMPLE_PARAMS) {
+      g2.setColor(COLORS[cx--]);
       v.set(0, param.get(0));
       v.set(1, param.get(1));
       dv.set(0, param.get(2) * 3);
@@ -145,34 +123,6 @@ public class DisplayClustering extends Frame {
     for (VectorWritable v : SAMPLE_DATA) {
       plotRectangle(g2, v.get(), dv);
     }
-  }
-  /**
-   * Identical to plotRectangle(), but with the option of setting the color of
-   * the rectangle's stroke.
-   * 
-   * NOTE: This should probably be refactored with plotRectangle() since most of
-   * the code here is direct copy/paste from that method.
-   * 
-   * @param g2
-   *          A Graphics2D context.
-   * @param v
-   *          A vector for the rectangle's center.
-   * @param dv
-   *          A vector for the rectangle's dimensions.
-   * @param color
-   *          The color of the rectangle's stroke.
-   */
-  protected static void plotClusteredRectangle(Graphics2D g2, Vector v, Vector dv, Color color) {
-    double[] flip = {1, -1};
-    Vector v2 = ((DenseVector)v).times(new DenseVector(flip));
-    v2 = v2.minus(dv.divide(2));
-    int h = SIZE / 2;
-    double x = v2.get(0) + h;
-    double y = v2.get(1) + h;
-    
-    g2.setStroke(new BasicStroke(1));
-    g2.setColor(color);
-    g2.draw(new Rectangle2D.Double(x * DS, y * DS, dv.get(0) * DS, dv.get(1) * DS));
   }
   
   /**
@@ -308,8 +258,5 @@ public class DisplayClustering extends Frame {
           UncommonDistributions.rNorm(my, sdy)})));
     }
   }
-  
-  protected static boolean isSignificant(Cluster cluster) {
-    return (double) cluster.getNumObservations() / SAMPLE_DATA.size() > significance;
-  }
+
 }
