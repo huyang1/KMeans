@@ -23,6 +23,7 @@ public class Job {
             log.info("Running whit default arguments");
             Path output = new Path("output");
             Configuration conf  = new Configuration();
+            HadoopUtil.delete(conf, output);
             run(conf, new Path("testdata"), output, new EuclideanDistanceMeasure(), 6, 0.5, 10);
         }
     }
@@ -36,8 +37,7 @@ public class Job {
         Path clusters = new Path(output, "random-generator-seeds");
         clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
         log.info("Running KMeans with k = {}", k);
-//        KMeansDriver.run(conf, input, clusters, output, convergenceDelta,
-//                maxIterations, true, 0.0, false);
+        //KMeansDriver.run(conf, directoryContainingConvertedInput, clusters, output, convergenceDelta, maxIterations, true, 0.0, false);
 //        // run ClusterDumper
 //        Path outGlob = new Path(output, "clusters-*-final");
 //        Path clusteredPoints = new Path(output,"clusteredPoints");

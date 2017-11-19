@@ -12,6 +12,8 @@ import java.util.Collection;
 
 public class DistanceMeasureCluster implements Cluster,Writable{
 
+    private boolean converged;
+
     private int id;
 
     private long numObservations;
@@ -115,6 +117,7 @@ public class DistanceMeasureCluster implements Cluster,Writable{
         }
     }
 
+    @Override
     public void observe(Vector x, double weight) {
         if (weight == 1.0) {
             observe(x);
@@ -154,7 +157,11 @@ public class DistanceMeasureCluster implements Cluster,Writable{
 
     @Override
     public boolean isConverged() {
-        return false;
+        return converged;
+    }
+
+    protected void setConverged(boolean converged) {
+        this.converged = converged;
     }
 
     @Override
@@ -208,6 +215,7 @@ public class DistanceMeasureCluster implements Cluster,Writable{
 
     @Override
     public void write(DataOutput out) throws IOException {
+        out.writeBoolean(converged);
         out.writeInt(id);
         out.writeLong(getNumObservations());
         out.writeLong(getTotalObservations());
@@ -218,8 +226,13 @@ public class DistanceMeasureCluster implements Cluster,Writable{
         VectorWritable.writeVector(out, s2);
     }
 
+    public Vector computeCentroid() {
+        return getS0() == 0 ? getCenter() : getS1().divide(getS0());
+    }
+
     @Override
     public void readFields(DataInput in) throws IOException {
+        this.converged = in.readBoolean();
         this.id = in.readInt();
         this.setNumObservations(in.readLong());
         this.setTotalObservations(in.readLong());
@@ -228,5 +241,12 @@ public class DistanceMeasureCluster implements Cluster,Writable{
         this.setS0(in.readDouble());
         this.setS1(VectorWritable.readVector(in));
         this.setS2(VectorWritable.readVector(in));
+    }
+
+    public boolean calculateConvergence(double convergenceDelta) {
+        Vector vector = computeCentroid();
+        this.converged = getMeasure().distance(vector, getCenter()) <= convergenceDelta;
+        return converged;
+
     }
 }

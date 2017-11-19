@@ -19,12 +19,18 @@ public class ClusterWritable implements Writable{
 
     @Override
     public void write(DataOutput dataOutput) throws IOException {
-
-
+        ((DistanceMeasureCluster)clusters).write(dataOutput);
     }
 
     @Override
     public void readFields(DataInput dataInput) throws IOException {
-
+        DistanceMeasureCluster distanceMeasureCluster = new DistanceMeasureCluster();
+        distanceMeasureCluster.readFields(dataInput);
+         clusters = distanceMeasureCluster;
     }
+
+    public Cluster getValue() {
+        return  this.clusters;
+    }
+
 }

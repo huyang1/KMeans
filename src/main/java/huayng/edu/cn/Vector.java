@@ -58,4 +58,6 @@ public interface Vector extends Cloneable {
 
   Map<Integer, Double> get();
 
+  void set(int index ,Double value);
+
 }

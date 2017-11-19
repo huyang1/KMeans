@@ -3,6 +3,9 @@ package huayng.edu.cn;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 稀疏向量
+ */
 public class sampleVector implements Vector{
     private Map<Integer,Double> values;
 
@@ -13,11 +16,13 @@ public class sampleVector implements Vector{
         size = 0;
     }
 
+
     public sampleVector(int size, Map<Integer, Double> map) {
         this.size = size;
         this.values = map;
     }
 
+    @Override
     public void set(int index ,Double value) {
         values.put(index,value);
         size++;

@@ -10,9 +10,11 @@ import java.util.Map;
 
 public final class VectorWritable extends Configured implements Writable {
   private sampleVector vector;
+
   public VectorWritable(sampleVector vector) {
     this.vector = vector;
   }
+
   public VectorWritable() {
     vector = new sampleVector();
   }

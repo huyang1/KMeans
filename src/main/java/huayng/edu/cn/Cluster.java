@@ -16,6 +16,7 @@
 package huayng.edu.cn;
 
 import huayng.edu.cn.parameters.Parametered;
+import org.apache.hadoop.io.Writable;
 
 import java.util.Map;
 
@@ -24,8 +25,13 @@ import java.util.Map;
  * attributes that are common across all clustering implementations
  * 
  */
-public interface Cluster extends Parametered {
+public interface Cluster extends Parametered,Writable {
 
+  String INITIAL_CLUSTERS_DIR = "clusters-0";
+
+  String CLUSTERS_DIR = "clusters-";
+
+  String FINAL_ITERATION_SUFFIX = "-final";
   
   /**
    * Get the id of the Cluster
@@ -78,6 +84,8 @@ public interface Cluster extends Parametered {
 
   void observe(Vector x);
 
+  void observe(Vector x, double weight);
+
   /**
    * if the receiver has converged, or false if that has no meaning for
    *         the implementation
@@ -91,5 +99,6 @@ public interface Cluster extends Parametered {
    * @return
    */
   double pdf(VectorWritable x);
+
 
 }

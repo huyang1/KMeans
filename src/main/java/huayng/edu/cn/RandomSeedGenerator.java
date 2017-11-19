@@ -19,6 +19,7 @@ package huayng.edu.cn;
 
 import com.google.common.base.Preconditions;
 import huayng.edu.cn.distance.DistanceMeasure;
+import huayng.edu.cn.sequencefile.PathFilters;
 import huayng.edu.cn.sequencefile.SequenceFileIterable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -77,7 +78,7 @@ public final class RandomSeedGenerator {
         inputPathPattern = input;
       }
       
-      FileStatus[] inputFiles = fs.globStatus(inputPathPattern);
+      FileStatus[] inputFiles = fs.globStatus(inputPathPattern, PathFilters.logsCRCFilter());//文件过滤
 
       Random random = (seed != null) ? new Random(seed) : new Random();
 
