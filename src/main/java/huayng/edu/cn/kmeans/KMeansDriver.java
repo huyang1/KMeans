@@ -68,7 +68,7 @@ public class KMeansDriver {
     }
     Path clustersOut = buildClusters(conf, input, clustersIn, output, maxIterations, delta, runSequential);
     if (runClustering) {
-      log.info("Clustering data");
+      log.info("Clustered data");
      //clusterData(conf, input, clustersOut, output, clusterClassificationThreshold, runSequential);
 
     }

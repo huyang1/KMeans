@@ -24,7 +24,7 @@ import java.util.Random;
 
 public final class RandomWrapper extends Random {
 
-  private static final long STANDARD_SEED = 0xCAFEDEADBEEFBABEL;
+  private static final long STANDARD_SEED = 0xCAFEDEADBEEFBAB2L;
 
   private final RandomGenerator random;
 

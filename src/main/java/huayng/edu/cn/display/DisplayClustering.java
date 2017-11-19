@@ -32,11 +32,11 @@ public class DisplayClustering extends Frame {
   
   protected static final int SIZE = 8; // screen size in inches
   
-  private static final Collection<DenseVector> SAMPLE_PARAMS = new ArrayList<>();
+  private static  Collection<DenseVector> SAMPLE_PARAMS = new ArrayList<>();
   
-  protected static final List<VectorWritable> SAMPLE_DATA = new ArrayList<>();
+  protected static  List<VectorWritable> SAMPLE_DATA = new ArrayList<>();
   
-  protected static final List<List<Cluster>> CLUSTERS = new ArrayList<>();
+  protected static  List<List<Cluster>> CLUSTERS = new ArrayList<>();
   
   static final Color[] COLORS = { Color.red, Color.orange, Color.yellow, Color.green, Color.blue, Color.magenta,
     Color.lightGray };
@@ -48,7 +48,28 @@ public class DisplayClustering extends Frame {
     initialize();
     this.setTitle("Sample Data");
   }
-  
+
+  public DisplayClustering(Collection<DenseVector> SAMPLE_PARAMS, List<VectorWritable> SAMPLE_DATA,List<List<Cluster>> CLUSTERS) {
+    this.SAMPLE_DATA = SAMPLE_DATA;
+    this.SAMPLE_PARAMS = SAMPLE_PARAMS;
+    this.CLUSTERS = CLUSTERS;
+    initialize();
+    this.setTitle("Sample Data");
+  }
+
+  public DisplayClustering(Collection<DenseVector> SAMPLE_PARAMS, List<VectorWritable> SAMPLE_DATA) {
+    this.SAMPLE_DATA = SAMPLE_DATA;
+    this.SAMPLE_PARAMS = SAMPLE_PARAMS;
+    initialize();
+    this.setTitle("Sample Data");
+  }
+
+  public DisplayClustering(List<VectorWritable> SAMPLE_DATA) {
+    this.SAMPLE_DATA = SAMPLE_DATA;
+    initialize();
+    this.setTitle("Sample Data");
+  }
+
   public void initialize() {
     // Get screen resolution
     res = Toolkit.getDefaultToolkit().getScreenResolution();
@@ -165,13 +186,13 @@ public class DisplayClustering extends Frame {
     g2.draw(new Ellipse2D.Double(x * DS, y * DS, dv.get(0) * DS, dv.get(1) * DS));
   }
   
-  protected static void generateSamples() {
-    generateSamples(500, 1, 1, 3);
+  public static void generateSamples() {
+    generateSamples(500, 1, 1, 2);
     generateSamples(300, 1, 0, 0.5);
     generateSamples(300, 0, 2, 0.1);
   }
   
-  protected static void generate2dSamples() {
+  public static void generate2dSamples() {
     generate2dSamples(500, 1, 1, 3, 1);
     generate2dSamples(300, 1, 0, 0.5, 1);
     generate2dSamples(300, 0, 2, 0.1, 0.5);
@@ -189,7 +210,7 @@ public class DisplayClustering extends Frame {
    * @param sd
    *          double standard deviation of the samples
    */
-  protected static void generateSamples(int num, double mx, double my, double sd) {
+  public static void generateSamples(int num, double mx, double my, double sd) {
     double[] params = {mx, my, sd, sd};
     SAMPLE_PARAMS.add( new DenseVector(params));
     log.info("Generating {} samples m=[{}, {}] sd={}", num, mx, my, sd);
@@ -199,15 +220,18 @@ public class DisplayClustering extends Frame {
     }
   }
   
-  protected static void writeSampleData(Path output) throws IOException {
+  public static void writeSampleData(Path output) throws IOException {
     Configuration conf = new Configuration();
     FileSystem fs = FileSystem.get(output.toUri(), conf);
 
     try (SequenceFile.Writer writer = new SequenceFile.Writer(fs, conf, output, Text.class, VectorWritable.class)) {
       int i = 0;
       for (VectorWritable vw : SAMPLE_DATA) {
-        writer.append(new Text("sample_" + i++), vw);
+        writer.append(new Text("" + i++), vw.ToSampleVector());
       }
+    } catch (Exception e) {
+      log.info("DenseVector translation sampleVector fail");
+      e.printStackTrace();
     }
   }
   
@@ -249,7 +273,7 @@ public class DisplayClustering extends Frame {
    * @param sdy
    *          double y-value standard deviation of the samples
    */
-  protected static void generate2dSamples(int num, double mx, double my, double sdx, double sdy) {
+  public static void generate2dSamples(int num, double mx, double my, double sdx, double sdy) {
     double[] params = {mx, my, sdx, sdy};
     SAMPLE_PARAMS.add(new DenseVector(params));
     log.info("Generating {} samples m=[{}, {}] sd=[{}, {}]", num, mx, my, sdx, sdy);

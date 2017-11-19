@@ -134,4 +134,12 @@ public class DenseVector implements Vector {
         Arrays.fill(this.values,value);
         return this;
     }
+
+    public sampleVector  ToSampleVector() {
+        sampleVector samplevector = new sampleVector();
+        for(int i=0; i<this.size; i++) {
+            samplevector.set(i,this.values[i]);
+        }
+        return samplevector;
+    }
 }

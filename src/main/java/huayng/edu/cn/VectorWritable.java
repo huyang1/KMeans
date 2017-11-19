@@ -57,4 +57,11 @@ public final class VectorWritable extends Configured implements Writable {
     return vector;
   }
 
+  public VectorWritable ToSampleVector() throws Exception{
+    if(this.vector instanceof huayng.edu.cn.DenseVector ) {
+      return new VectorWritable(((DenseVector)this.vector).ToSampleVector());
+    }
+    return this;
+  }
+
 }

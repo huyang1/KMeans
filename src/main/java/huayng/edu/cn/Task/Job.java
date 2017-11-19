@@ -3,6 +3,7 @@ package huayng.edu.cn.Task;
 import huayng.edu.cn.HadoopUtil;
 import huayng.edu.cn.RandomSeedGenerator;
 import huayng.edu.cn.conversion.InputDriver;
+import huayng.edu.cn.display.DisplayClustering;
 import huayng.edu.cn.distance.DistanceMeasure;
 import huayng.edu.cn.distance.EuclideanDistanceMeasure;
 import huayng.edu.cn.kmeans.KMeansDriver;
@@ -33,7 +34,10 @@ public class Job {
         Path directoryContainingConvertedInput = new Path(output, DIRECTORY_CONTAINING_CONVERTED_INPUT);
         log.info("Preparing Input");
         HadoopUtil.delete(conf, directoryContainingConvertedInput);
-        InputDriver.runJob(input, directoryContainingConvertedInput, "org.apache.mahout.math.RandomAccessSparseVector");//将输入文件序列化
+        //InputDriver.runJob(input, directoryContainingConvertedInput, "org.apache.mahout.math.RandomAccessSparseVector");//将输入文件序列化
+        DisplayClustering displayClustering = new DisplayClustering();
+        displayClustering.generateSamples();
+        displayClustering.writeSampleData(directoryContainingConvertedInput);
         log.info("Running random seed to get initial clusters");
         Path clusters = new Path(output, "random-generator-seeds");
         clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
