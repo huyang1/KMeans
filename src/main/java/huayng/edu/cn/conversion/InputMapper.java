@@ -1,15 +1,15 @@
 package huayng.edu.cn.conversion;
 
+import huayng.edu.cn.Vector;
+import huayng.edu.cn.VectorWritable;
+import huayng.edu.cn.sampleVector;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.mahout.math.Vector;
-import org.apache.mahout.math.VectorWritable;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Pattern;
@@ -31,18 +31,18 @@ public class InputMapper extends Mapper<LongWritable, Text, Text, VectorWritable
         doubles.add(Double.valueOf(value));
       }
     }
+    sampleVector  vector = new sampleVector();
     // ignore empty lines in data file
     if (!doubles.isEmpty()) {
       try {
-        Vector result = (Vector) constructor.newInstance(doubles.size());
         int index = 0;
         for (Double d : doubles) {
-          result.set(index++, d);
+          vector.set(index++, d);
         }
-        VectorWritable vectorWritable = new VectorWritable(result);
+        VectorWritable vectorWritable = new VectorWritable(vector);
         context.write(new Text(String.valueOf(index)), vectorWritable);
 
-      } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+      } catch (Exception e) {
         throw new IllegalStateException(e);
       }
     }
@@ -51,14 +51,6 @@ public class InputMapper extends Mapper<LongWritable, Text, Text, VectorWritable
   @Override
   protected void setup(Context context) throws IOException, InterruptedException {
     super.setup(context);
-    Configuration conf = context.getConfiguration();
-    String vectorImplClassName = conf.get("vector.implementation.class.name");
-    try {
-      Class<? extends Vector> outputClass = conf.getClassByName(vectorImplClassName).asSubclass(Vector.class);
-      constructor = outputClass.getConstructor(int.class);
-    } catch (NoSuchMethodException | ClassNotFoundException e) {
-      throw new IllegalStateException(e);
-    }
   }
 
 }

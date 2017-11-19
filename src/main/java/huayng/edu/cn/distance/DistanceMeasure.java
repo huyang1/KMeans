@@ -44,6 +44,6 @@ public interface DistanceMeasure extends Parametered {
    * @param centroid
    *          Centroid vector
    */
-  double distance(double centroidLengthSquare, Vector centroid, Vector v);
+  //double distance(double centroidLengthSquare, Vector centroid, Vector v);
   
 }
