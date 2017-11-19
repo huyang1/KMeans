@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.util.Map;
 
 public final class VectorWritable extends Configured implements Writable {
-  private sampleVector vector;
+  private Vector vector;
 
-  public VectorWritable(sampleVector vector) {
+  public VectorWritable(Vector vector) {
     this.vector = vector;
   }
 

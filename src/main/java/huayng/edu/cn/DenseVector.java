@@ -1,5 +1,6 @@
 package huayng.edu.cn;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class DenseVector implements Vector {
@@ -40,12 +41,18 @@ public class DenseVector implements Vector {
 
     @Override
     public Vector clone() {
-        return null;
+        return new DenseVector(this.values);
     }
 
     @Override
-    public Vector times() {
-        return null;
+    public Vector times() { return null; }
+
+    public Vector times(Vector vector) {
+        DenseVector denseVector = new DenseVector(this.size);
+        for(int i=0; i<this.size;i++) {
+            denseVector.set(i,get(i)*vector.get(i));
+        }
+        return denseVector;
     }
 
     @Override
@@ -59,12 +66,21 @@ public class DenseVector implements Vector {
 
     @Override
     public Vector multi(double x) {
-        return null;
+        DenseVector denseVector = new DenseVector(this.size);
+        for(int i=0; i<this.size; i++) {
+            denseVector.set(i,this.values[i]*x);
+        }
+        return denseVector;
     }
 
     @Override
     public Vector minus(Vector v) {
-        return null;
+        assert (this.size == v.getSize());
+        DenseVector denseVector = new DenseVector(this.size);
+        for(int i=0; i<this.size; i++) {
+            denseVector.set(i,this.get(i)-v.get(i));
+        }
+        return denseVector;
     }
 
     @Override
@@ -77,10 +93,15 @@ public class DenseVector implements Vector {
         return this.size;
     }
 
+    public void setSize(int size) { this.size = size; }
+
     @Override
     public Map<Integer, Double> get() {
         return null;
     }
+
+    @Override
+    public double get(int index) {return this.values[index]; }
 
     public double getValue(int index) {
         return this.values[index];
@@ -89,6 +110,12 @@ public class DenseVector implements Vector {
     @Override
     public void set(int index, Double value) {
         this.values[index] = value;
+    }
+
+    @Override
+    public void clean() {
+        this.size = 0;
+        this.values = new double[0];
     }
 
     public int maxValueIndex() {
@@ -101,5 +128,10 @@ public class DenseVector implements Vector {
             }
         }
         return result;
+    }
+
+    public Vector assign(double value) {
+        Arrays.fill(this.values,value);
+        return this;
     }
 }

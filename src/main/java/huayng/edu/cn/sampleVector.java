@@ -34,6 +34,9 @@ public class sampleVector implements Vector{
     }
 
     @Override
+    public double get(int index) {return this.values.get(index); }
+
+    @Override
     public int getSize() {
         return size;
     }
