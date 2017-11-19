@@ -18,6 +18,7 @@ package huayng.edu.cn.kmeans;
 
 import huayng.edu.cn.Cluster;
 import huayng.edu.cn.classify.ClusterClassifier;
+import huayng.edu.cn.iterator.ClusterIterator;
 import huayng.edu.cn.policy.ClusteringPolicy;
 import huayng.edu.cn.policy.KMeansClusteringPolicy;
 import org.apache.hadoop.conf.Configuration;
@@ -68,11 +69,11 @@ public class KMeansDriver {
     Path clustersOut = buildClusters(conf, input, clustersIn, output, maxIterations, delta, runSequential);
     if (runClustering) {
       log.info("Clustering data");
-     /*------------------/ clusterData(conf, input, clustersOut, output, clusterClassificationThreshold, runSequential);
-     --------------------------------------------------------------
-      */
+     //clusterData(conf, input, clustersOut, output, clusterClassificationThreshold, runSequential);
+
     }
   }
+
 
   public static Path buildClusters(Configuration conf, Path input, Path clustersIn, Path output,
                                    int maxIterations, String delta, boolean runSequential) throws IOException,
@@ -95,8 +96,8 @@ public class KMeansDriver {
       //ClusterIterator.iterateSeq(conf, input, priorClustersPath, output, maxIterations);
       log.info("not support sequence work,please set runSequential : false");
     } else {
-      /*----------------------ClusterIterator.iterateMR(conf, input, priorClustersPath, output, maxIterations);
-      ---------------------------------------------------------------*/
+      ClusterIterator.iterateMR(conf, input, priorClustersPath, output, maxIterations);
+
     }
     return output;
   }

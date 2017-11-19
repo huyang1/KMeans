@@ -17,22 +17,41 @@
 
 package huayng.edu.cn.iterator;
 
-import huayng.edu.cn.*;
+import huayng.edu.cn.Cluster;
+import huayng.edu.cn.ClusterWritable;
 import huayng.edu.cn.classify.ClusterClassifier;
 import huayng.edu.cn.policy.ClusteringPolicy;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.WritableComparable;
-import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class CIMapper extends Mapper<WritableComparable<?>,VectorWritable,IntWritable,ClusterWritable> {
+public class CIReducer extends Reducer<IntWritable,ClusterWritable,IntWritable,ClusterWritable> {
   
   private ClusterClassifier classifier;
   private ClusteringPolicy policy;
+  
+  @Override
+  protected void reduce(IntWritable key, Iterable<ClusterWritable> values, Context context) throws IOException,
+      InterruptedException {
+    Iterator<ClusterWritable> iter = values.iterator();
+    Cluster first = iter.next().getValue(); // there must always be at least one
+    while (iter.hasNext()) {
+      Cluster cluster = iter.next().getValue();
+      first.observe(cluster);
+    }
+    List<Cluster> models = new ArrayList<>();
+    models.add(first);
+    classifier = new ClusterClassifier(models, policy);
+    classifier.close();
+    //计算阙值是否满足要求
+    context.write(key, new ClusterWritable(first));
+  }
 
   @Override
   protected void setup(Context context) throws IOException, InterruptedException {
@@ -43,26 +62,6 @@ public class CIMapper extends Mapper<WritableComparable<?>,VectorWritable,IntWri
     policy = classifier.getPolicy();
     //policy.update(classifier);
     super.setup(context);
-  }
-
-  @Override
-  protected void map(WritableComparable<?> key, VectorWritable value, Context context) throws IOException,
-      InterruptedException {
-    Vector probabilities = classifier.classify(value.get());
-    int maxIndex = ((DenseVector)probabilities).maxValueIndex();
-    classifier.train(maxIndex, value.get(),((DenseVector) probabilities).getValue(maxIndex));//el.index为该instance所属的index，el.get为instance权重
-
-  }
-
-  @Override
-  protected void cleanup(Context context) throws IOException, InterruptedException {
-    List<Cluster> clusters = classifier.getModels();
-    ClusterWritable cw = new ClusterWritable();
-    for (int index = 0; index < clusters.size(); index++) {
-      cw.setValue(clusters.get(index));
-      context.write(new IntWritable(index), cw);//把flush写在cleanup中。
-    }
-    super.cleanup(context);
   }
   
 }

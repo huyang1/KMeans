@@ -215,6 +215,7 @@ public class DistanceMeasureCluster implements Cluster,Writable{
 
     @Override
     public void write(DataOutput out) throws IOException {
+        out.writeUTF(measure.getClass().getName());
         out.writeBoolean(converged);
         out.writeInt(id);
         out.writeLong(getNumObservations());
@@ -232,6 +233,8 @@ public class DistanceMeasureCluster implements Cluster,Writable{
 
     @Override
     public void readFields(DataInput in) throws IOException {
+        String dm = in.readUTF();
+        this.measure = ClassUtils.instantiateAs(dm, DistanceMeasure.class);
         this.converged = in.readBoolean();
         this.id = in.readInt();
         this.setNumObservations(in.readLong());

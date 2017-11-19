@@ -5,6 +5,7 @@ import huayng.edu.cn.RandomSeedGenerator;
 import huayng.edu.cn.conversion.InputDriver;
 import huayng.edu.cn.distance.DistanceMeasure;
 import huayng.edu.cn.distance.EuclideanDistanceMeasure;
+import huayng.edu.cn.kmeans.KMeansDriver;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public class Job {
         Path clusters = new Path(output, "random-generator-seeds");
         clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
         log.info("Running KMeans with k = {}", k);
-        //KMeansDriver.run(conf, directoryContainingConvertedInput, clusters, output, convergenceDelta, maxIterations, true, 0.0, false);
+        KMeansDriver.run(conf, directoryContainingConvertedInput, clusters, output, convergenceDelta, maxIterations, true, 0.0, false);
 //        // run ClusterDumper
 //        Path outGlob = new Path(output, "clusters-*-final");
 //        Path clusteredPoints = new Path(output,"clusteredPoints");

@@ -115,4 +115,9 @@ public class sampleVector implements Vector{
         }
         return vector;
     }
+
+    public void clean() {
+        this.values.clear();
+        this.size = 0;
+    }
 }

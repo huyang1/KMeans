@@ -74,7 +74,7 @@ public class DenseVector implements Vector {
 
     @Override
     public int getSize() {
-        return 0;
+        return this.size;
     }
 
     @Override
@@ -82,8 +82,24 @@ public class DenseVector implements Vector {
         return null;
     }
 
+    public double getValue(int index) {
+        return this.values[index];
+    }
+
     @Override
     public void set(int index, Double value) {
         this.values[index] = value;
+    }
+
+    public int maxValueIndex() {
+        int result = -1;
+        double max = Double.NEGATIVE_INFINITY;
+        for(int i=0; i < this.size; i++) {
+            if(this.values[i] > max) {
+                result = i;
+                max = this.values[i];
+            }
+        }
+        return result;
     }
 }

@@ -30,6 +30,7 @@ public final class VectorWritable extends Configured implements Writable {
 
   @Override
   public void readFields(DataInput dataInput) throws IOException {
+    this.vector.clean();
     int size = dataInput.readInt();
     for(int i=0; i<size ;i++) {
       vector.set(i,dataInput.readDouble());
