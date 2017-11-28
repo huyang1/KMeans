@@ -65,7 +65,7 @@ public class KMeansClusteringPolicy implements ClusteringPolicy {
   public Vector classify(Vector data, ClusterClassifier prior) {
     List<Cluster> models = prior.getModels();
     int i = 0;
-    Vector pdfs = new DenseVector(models.size());
+    Vector<Double> pdfs = new DenseVector(models.size());
     for (Cluster model : models) {
       pdfs.set(i++, model.pdf(new VectorWritable((sampleVector) data)));
     }

@@ -6,8 +6,10 @@ import java.util.Map;
 /**
  * 稀疏向量
  */
-public class sampleVector implements Vector{
+public class sampleVector implements Vector<Double>{
     private Map<Integer,Double> values;
+
+    private int classify = 0;
 
     private int size;
 
@@ -22,27 +24,36 @@ public class sampleVector implements Vector{
         this.values = map;
     }
 
+
     @Override
     public void set(int index ,Double value) {
         values.put(index,value);
         size++;
     }
 
-    @Override
-    public Map<Integer, Double> get() {
-        return values;
-    }
-
-    @Override
-    public double get(int index) {return this.values.get(index); }
 
     @Override
     public int getSize() {
         return size;
     }
 
+    @Override
+    public Double get(int index) {
+        return this.values.get(index);
+    }
+
     public void setSize(int size) {
         this.size = size;
+    }
+
+    @Override
+    public int getClassify() {
+        return this.classify;
+    }
+
+    @Override
+    public void setClassify(int classify) {
+        this.classify = classify;
     }
 
     @Override
@@ -55,12 +66,12 @@ public class sampleVector implements Vector{
         sampleVector vector = (sampleVector) x;
         sampleVector result = new sampleVector();
         for(Map.Entry<Integer, Double> entry : this.values.entrySet()) {
-            result.set(entry.getKey(),entry.getValue()+vector.get().get(entry.getKey()));
+            result.set(entry.getKey(),entry.getValue()+vector.get(entry.getKey()));
         }
         return result;
     }
     @Override
-    public double zSum() {
+    public Double zSum() {
         double result =0;
         for(Map.Entry<Integer, Double> entry : this.values.entrySet()) {
             result += entry.getValue();
@@ -104,10 +115,11 @@ public class sampleVector implements Vector{
 
     @Override
     public Vector minus(Vector v) {
+        assert (this.size == v.getSize());
         sampleVector vector = (sampleVector) v;
         sampleVector result = new sampleVector();
-        for(Map.Entry<Integer, Double> entry : this.values.entrySet()) {
-            result.set(entry.getKey(),entry.getValue()-vector.get().get(entry.getKey()));
+        for(int i=0; i < this.size; i++) {
+            result.set(i,get(i)-((sampleVector) v).get(i));
         }
         return result;
     }
@@ -142,5 +154,13 @@ public class sampleVector implements Vector{
             denseVector.set(index++,entry.getValue());
         }
         return denseVector;
+    }
+
+    public String toString() {
+        String str=" ";
+        for(int i=0;i<this.size;i++) {
+            str+=get(i).toString()+" ";
+        }
+        return "["+str+"]";
     }
 }

@@ -1,14 +1,16 @@
 package huyang.edu.cn;
 
 
-import java.util.Map;
-
 /**
  * The basic interface including numerous convenience functions <p> NOTE: All implementing classes must have a
  * constructor that takes an int for cardinality and a no-arg constructor that can be used for marshalling the Writable
  * instance <p> NOTE: Implementations may choose to reuse the Vector.Element in the Iterable methods
  */
-public interface Vector extends Cloneable {
+public interface Vector<T> extends Cloneable {
+
+   int getClassify() ;
+
+   void setClassify(int classify);
 
   /**
    * Return a new vector containing the sum of each value of the recipient and the argument
@@ -25,7 +27,7 @@ public interface Vector extends Cloneable {
    * @return a new Vector
    * @throws Exception if the cardinalities differ
    */
-  Vector plus(Vector x);
+  Vector plus(Vector<T> x);
 
 
   /**
@@ -33,7 +35,7 @@ public interface Vector extends Cloneable {
    *
    * @return a double
    */
-  double zSum();
+  T zSum();
 
   Vector clone();
 
@@ -47,17 +49,15 @@ public interface Vector extends Cloneable {
 
   Vector multi(double x);
 
-  Vector minus(Vector v);
+  Vector minus(Vector<T> v);
 
   Vector like();
 
   int getSize();
 
-  Map<Integer, Double> get();
+  T get(int index);
 
-  double get(int index);
-
-  void set(int index ,Double value);
+  void set(int index ,T value);
 
   void clean();
 
