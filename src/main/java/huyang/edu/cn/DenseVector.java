@@ -1,10 +1,11 @@
 package huyang.edu.cn;
 
 import java.util.Arrays;
-import java.util.Map;
 
-public class DenseVector implements Vector {
+public class DenseVector implements Vector<Double> {
     private double[] values;
+
+    private int classify = 0;
 
     private int size;
 
@@ -21,6 +22,16 @@ public class DenseVector implements Vector {
     }
 
     @Override
+    public int getClassify() {
+        return this.classify;
+    }
+
+    @Override
+    public void setClassify(int classify) {
+        this.classify = classify;
+    }
+
+    @Override
     public Vector plus(double x) {
         return null;
     }
@@ -31,7 +42,7 @@ public class DenseVector implements Vector {
     }
 
     @Override
-    public double zSum() {
+    public Double zSum() {
         double sum =0 ;
         for(int i=0;i<this.size;i++) {
             sum += this.values[i];
@@ -48,9 +59,10 @@ public class DenseVector implements Vector {
     public Vector times() { return null; }
 
     public Vector times(Vector vector) {
+        assert (this.size == vector.getSize());
         DenseVector denseVector = new DenseVector(this.size);
         for(int i=0; i<this.size;i++) {
-            denseVector.set(i,get(i)*vector.get(i));
+            denseVector.set(i,get(i)*(Double)vector.get(i));
         }
         return denseVector;
     }
@@ -74,7 +86,7 @@ public class DenseVector implements Vector {
     }
 
     @Override
-    public Vector minus(Vector v) {
+    public Vector minus(Vector<Double> v) {
         assert (this.size == v.getSize());
         DenseVector denseVector = new DenseVector(this.size);
         for(int i=0; i<this.size; i++) {
@@ -96,12 +108,7 @@ public class DenseVector implements Vector {
     public void setSize(int size) { this.size = size; }
 
     @Override
-    public Map<Integer, Double> get() {
-        return null;
-    }
-
-    @Override
-    public double get(int index) {return this.values[index]; }
+    public Double get(int index) {return this.values[index]; }
 
     public double getValue(int index) {
         return this.values[index];
@@ -150,5 +157,13 @@ public class DenseVector implements Vector {
             samplevector.set(i,this.values[i]);
         }
         return samplevector;
+    }
+
+    public String toString() {
+        String str=" ";
+        for(int i=0;i<this.size;i++) {
+            str+=get(i).toString()+" ";
+        }
+        return "["+str+"]";
     }
 }

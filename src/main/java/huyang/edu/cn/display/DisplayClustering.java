@@ -157,9 +157,9 @@ public class DisplayClustering {
    * @param dv
    *          a Vector of rectangle dimensions
    */
-  protected static void plotRectangle(Graphics2D g2, Vector v, Vector dv) {
+  protected static void plotRectangle(Graphics2D g2, Vector<Double> v, Vector<Double> dv) {
     double[] flip = {1, -1};
-    Vector v2;
+    Vector<Double> v2;
     if(v instanceof sampleVector) {
       v2 = ((sampleVector) v).toDenseVector().times(new DenseVector(flip));
     } else {
@@ -182,9 +182,9 @@ public class DisplayClustering {
    * @param dv
    *          a Vector of ellipse dimensions
    */
-  protected static void plotEllipse(Graphics2D g2, Vector v, Vector dv) {
+  protected static void plotEllipse(Graphics2D g2, Vector v, Vector<Double> dv) {
     double[] flip = {1, -1};
-    Vector v2;
+    Vector<Double> v2;
     if(v instanceof sampleVector) {
       v2 = ((sampleVector) v).toDenseVector().times(new DenseVector(flip));
     } else {
@@ -202,12 +202,7 @@ public class DisplayClustering {
     generateSamples(300, 1, 0, 0.5);
     generateSamples(300, 0, 2, 0.1);
   }
-  
-  public static void generate2dSamples() {
-    generate2dSamples(500, 1, 1, 3, 1);
-    generate2dSamples(300, 1, 0, 0.5, 1);
-    generate2dSamples(300, 0, 2, 0.1, 0.5);
-  }
+
   
   /**
    * Generate random samples and add them to the sampleData
@@ -255,7 +250,7 @@ public class DisplayClustering {
       log.info(
           "Reading Cluster:{} center:{} numPoints:{} radius:{}",
           cluster.getId(), cluster.getCenter(),
-          cluster.getTotalObservations(), cluster.getRadius(), null);
+          cluster.getNumObservations(), cluster.getRadius(), null);
       clusters.add(cluster);
     }
     return clusters;
@@ -267,30 +262,6 @@ public class DisplayClustering {
     for (FileStatus s : fs.listStatus(output, new ClustersFilter())) {
       List<Cluster> clusters = readClustersWritable(s.getPath());
       CLUSTERS.add(clusters);
-    }
-  }
-  
-  /**
-   * Generate random samples and add them to the sampleData
-   * 
-   * @param num
-   *          int number of samples to generate
-   * @param mx
-   *          double x-value of the sample mean
-   * @param my
-   *          double y-value of the sample mean
-   * @param sdx
-   *          double x-value standard deviation of the samples
-   * @param sdy
-   *          double y-value standard deviation of the samples
-   */
-  public static void generate2dSamples(int num, double mx, double my, double sdx, double sdy) {
-    double[] params = {mx, my, sdx, sdy};
-    SAMPLE_PARAMS.add(new DenseVector(params));
-    log.info("Generating {} samples m=[{}, {}] sd=[{}, {}]", num, mx, my, sdx, sdy);
-    for (int i = 0; i < num; i++) {
-      SAMPLE_DATA.add(new VectorWritable(new DenseVector(new double[] {UncommonDistributions.rNorm(mx, sdx),
-          UncommonDistributions.rNorm(my, sdy)})));
     }
   }
 

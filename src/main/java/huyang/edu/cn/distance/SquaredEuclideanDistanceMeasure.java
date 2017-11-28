@@ -32,7 +32,7 @@ public class SquaredEuclideanDistanceMeasure implements DistanceMeasure {
 
   @Override
   public double distance(Vector v1, Vector v2) {
-    return v2.minus(v1).times().zSum();
+    return (Double) v2.minus(v1).times().zSum();
   }
 
 //  @Override
