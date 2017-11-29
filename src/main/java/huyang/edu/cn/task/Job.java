@@ -93,11 +93,11 @@ public class Job extends AbstractJob{
             inputPath = new Path("testdata");
         }
         if(argMap.containsKey("outputPath")) {
-            outputPath = new Path(argMap.get("inputPath"));
+            outputPath = new Path(argMap.get("outputPath"));
         } else {
             outputPath = new Path("output");
         }
-        if(argMap.containsKey("sclusters")) {
+        if(argMap.containsKey("clusters")) {
             k = Integer.parseInt(argMap.get("clusters"));
         } else {
             k = 3;

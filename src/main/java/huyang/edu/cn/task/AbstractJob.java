@@ -54,17 +54,17 @@ public class AbstractJob extends Configured implements Tool{
             argMap.put("maxIterations",cmd.getOptionValue("it"));
         }
         if (argMap.size()==1 && argMap.containsKey("help")) {
-            System.out.printf("%-8s%-20s","  -"+options.getOption("h").getOpt(),options.getOption("h").getLongOpt());
+            System.out.printf("%-8s%-25s","  -"+options.getOption("h").getOpt(),options.getOption("h").getLongOpt());
             System.out.println(options.getOption("h").getDescription());
-            System.out.printf("%-8s%-20s","  -"+options.getOption("i").getOpt(),options.getOption("i").getLongOpt());
+            System.out.printf("%-8s%-25s","  -"+options.getOption("i").getOpt(),options.getOption("i").getLongOpt());
             System.out.println(options.getOption("i").getDescription());
-            System.out.printf("%-8s%-20s","  -"+options.getOption("o").getOpt(),options.getOption("o").getLongOpt());
+            System.out.printf("%-8s%-25s","  -"+options.getOption("o").getOpt(),options.getOption("o").getLongOpt());
             System.out.println(options.getOption("o").getDescription());
-            System.out.printf("%-8s%-20s","  -"+options.getOption("k").getOpt(),options.getOption("k").getLongOpt());
+            System.out.printf("%-8s%-25s","  -"+options.getOption("k").getOpt(),options.getOption("k").getLongOpt());
             System.out.println(options.getOption("k").getDescription());
-            System.out.printf("%-8s%-20s","  -"+options.getOption("delta").getOpt(),options.getOption("delta").getLongOpt());
+            System.out.printf("%-8s%-25s","  -"+options.getOption("delta").getOpt(),options.getOption("delta").getLongOpt());
             System.out.println(options.getOption("delta").getDescription());
-            System.out.printf("%-8s%-20s","  -"+options.getOption("it").getOpt(),options.getOption("it").getLongOpt());
+            System.out.printf("%-8s%-25s","  -"+options.getOption("it").getOpt(),options.getOption("it").getLongOpt());
             System.out.println(options.getOption("it").getDescription());
         }
         return argMap;
