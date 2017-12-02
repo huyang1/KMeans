@@ -1,5 +1,6 @@
-package huyang.edu.cn;
+package huyang.edu.cn.canopy;
 
+import huyang.edu.cn.*;
 import huyang.edu.cn.distance.DistanceMeasure;
 import org.apache.hadoop.io.Writable;
 
@@ -7,8 +8,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class DistanceMeasureCluster implements Cluster,Writable{
-
+public class CanopyCluster implements Cluster,Writable {
     private boolean converged;
 
     private int id;
@@ -30,9 +30,9 @@ public class DistanceMeasureCluster implements Cluster,Writable{
 
     private DistanceMeasure measure;
 
-    public DistanceMeasureCluster() {}
+    public CanopyCluster() {}
 
-    public DistanceMeasureCluster(Vector vector, int id, DistanceMeasure measure) {
+    public CanopyCluster(Vector vector, int id, DistanceMeasure measure) {
         this.numObservations = (long) 0;
         this.totalObservations = (long) 0;
         this.center = vector.clone();
@@ -178,7 +178,6 @@ public class DistanceMeasureCluster implements Cluster,Writable{
         return 1 / (1 + measure.distance(x.get(), getCenter()));
     }
 
-
     public DistanceMeasure getMeasure() {
         return measure;
     }
@@ -192,7 +191,7 @@ public class DistanceMeasureCluster implements Cluster,Writable{
     }
 
     public String getIdentifier() {
-        return "DMC:" + getId();
+        return "canopy:" + getId();
     }
 
     @Override
