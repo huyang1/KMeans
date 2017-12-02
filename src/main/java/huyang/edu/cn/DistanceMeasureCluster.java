@@ -1,14 +1,11 @@
 package huyang.edu.cn;
 
 import huyang.edu.cn.distance.DistanceMeasure;
-import huyang.edu.cn.parameters.Parameter;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Writable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.Collection;
 
 public class DistanceMeasureCluster implements Cluster,Writable{
 
@@ -181,34 +178,7 @@ public class DistanceMeasureCluster implements Cluster,Writable{
         return 1 / (1 + measure.distance(x.get(), getCenter()));
     }
 
-    @Override
-    public Collection<Parameter<?>> getParameters() {
-        return null;
-    }
 
-    @Override
-    public void createParameters(String prefix, Configuration jobConf) {
-        if (getS0() == 0) {
-            return;
-        }
-        setNumObservations((long) getS0());
-        setTotalObservations(getTotalObservations() + getNumObservations());
-        setCenter(getS1().divide(getS0()));
-        // compute the component stds
-        if (getS0() > 1) {
-            setRadius((getS2().multi(getS0()).minus(getS1().times())).square().divide(getS0()));
-        }
-        setS0(0d);
-        setS1(center.like());
-        setS2(center.like());
-    }
-
-    @Override
-    public void configure(Configuration config) {
-        if (measure != null) {
-            measure.configure(config);
-        }
-    }
     public DistanceMeasure getMeasure() {
         return measure;
     }

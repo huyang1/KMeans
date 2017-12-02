@@ -2,6 +2,7 @@ package huyang.edu.cn.task;
 
 import huyang.edu.cn.HadoopUtil;
 import huyang.edu.cn.RandomSeedGenerator;
+import huyang.edu.cn.canopy.Canopy;
 import huyang.edu.cn.conversion.InputDriver;
 import huyang.edu.cn.display.DisplayClustering;
 import huyang.edu.cn.distance.DistanceMeasure;
@@ -43,7 +44,8 @@ public class Job extends AbstractJob{
         displayClustering.writeSampleData(directoryContainingConvertedInput);
         log.info("Running random seed to get initial clusters");
         Path clusters = new Path(output, "random-generator-seeds");
-        clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
+        //clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
+        clusters = Canopy.run(conf,directoryContainingConvertedInput,clusters,measure,3.0,1.5);
         log.info("Running KMeans with k = {}", k);
         KMeansDriver.run(conf, directoryContainingConvertedInput, clusters, output, convergenceDelta, maxIterations, true, 0.0, false);
         displayClustering.loadClustersWritable(output);
@@ -60,6 +62,8 @@ public class Job extends AbstractJob{
         log.info("Running random seed to get initial clusters");
         Path clusters = new Path(output, "random-generator-seeds");
         clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
+        //use canopy generator seeds
+        clusters = Canopy.run(conf,directoryContainingConvertedInput,clusters,measure,3.0,1.5);
         log.info("Running KMeans with k = {}", k);
         KMeansDriver.run(conf, directoryContainingConvertedInput, clusters, output, convergenceDelta, maxIterations, true, 0.0, false);
     }

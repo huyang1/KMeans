@@ -145,7 +145,6 @@ public class ClusterClassifier  implements OnlineLearner, Writable {
     for (ClusterWritable cw : new SequenceFileDirValueIterable<ClusterWritable>(path, PathType.LIST,
             PathFilters.logsCRCFilter(), config)) {
       Cluster cluster = cw.getValue();
-      cluster.configure(conf);
       clusters.add(cluster);
     }
     this.models = clusters;

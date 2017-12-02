@@ -15,7 +15,6 @@
  */
 package huyang.edu.cn;
 
-import huyang.edu.cn.parameters.Parametered;
 import org.apache.hadoop.io.Writable;
 
 /**
@@ -23,7 +22,7 @@ import org.apache.hadoop.io.Writable;
  * attributes that are common across all clustering implementations
  * 
  */
-public interface Cluster extends Parametered,Writable {
+public interface Cluster extends Writable {
 
   String INITIAL_CLUSTERS_DIR = "clusters-0";
 
