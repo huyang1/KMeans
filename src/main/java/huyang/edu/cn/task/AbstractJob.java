@@ -53,11 +53,11 @@ public class AbstractJob extends Configured implements Tool{
         } else if (cmd.hasOption("it")) {
             argMap.put("maxIterations",cmd.getOptionValue("it"));
         } else if (cmd.hasOption("c")) {
-            argMap.put("maxIterations",cmd.getOptionValue("c"));
+            argMap.put("useCanopy",cmd.getOptionValue("c"));
         } else if (cmd.hasOption("t1")) {
-            argMap.put("maxIterations",cmd.getOptionValue("t1"));
+            argMap.put("T1",cmd.getOptionValue("t1"));
         } else if (cmd.hasOption("t2")) {
-            argMap.put("maxIterations",cmd.getOptionValue("t2"));
+            argMap.put("T2",cmd.getOptionValue("t2"));
         }
         if (argMap.size()==1 && argMap.containsKey("help")) {
             System.out.printf("%-8s%-25s","  -"+options.getOption("h").getOpt(),options.getOption("h").getLongOpt());

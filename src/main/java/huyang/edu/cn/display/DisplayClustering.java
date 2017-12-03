@@ -4,17 +4,14 @@ import huyang.edu.cn.*;
 import huyang.edu.cn.sequencefile.PathFilters;
 import huyang.edu.cn.sequencefile.PathType;
 import huyang.edu.cn.sequencefile.SequenceFileDirValueIterable;
-import huyang.edu.cn.sequencefile.SequenceFileIterable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.Writable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -243,17 +240,19 @@ public class DisplayClustering {
     }
   }
 
-  public static void ReadSampleData(Path input) throws IOException {
+  protected static List<Cluster> readClustersWritable(Path clustersIn) {
+    List<Cluster> clusters = new ArrayList<>();
     Configuration conf = new Configuration();
-    FileSystem fs = FileSystem.get(input.toUri(), conf);
-    FileStatus[] inputFiles = fs.globStatus(input, PathFilters.logsCRCFilter());
-    for(FileStatus status : inputFiles) {
-      for (Pair<Writable, VectorWritable> record
-              : new SequenceFileIterable<Writable, VectorWritable>(status.getPath(), true, conf)) {
-        SAMPLE_DATA.add(record.getSecond());
-      }
+    for (ClusterWritable value : new SequenceFileDirValueIterable<ClusterWritable>(clustersIn, PathType.LIST,
+            PathFilters.logsCRCFilter(), conf)) {
+      Cluster cluster = value.getValue();
+      log.info(
+              "Reading Cluster:{} center:{} numPoints:{} radius:{}",
+              cluster.getId(), cluster.getCenter(),
+              cluster.getNumObservations(), cluster.getRadius());
+      clusters.add(cluster);
     }
-
+    return clusters;
   }
   
   public static void loadClustersWritable(Path output) throws IOException {

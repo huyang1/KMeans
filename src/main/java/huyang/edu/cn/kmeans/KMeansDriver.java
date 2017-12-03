@@ -50,14 +50,11 @@ public class KMeansDriver {
    *          the maximum number of iterations
    * @param runClustering
    *          true if points are to be clustered after iterations are completed
-   * @param clusterClassificationThreshold
-   *          Is a clustering strictness / outlier removal parameter. Its value should be between 0 and 1. Vectors
-   *          having pdf below this value will not be clustered.
    * @param runSequential
    *          if true execute sequential algorithm
    */
   public static void run(Configuration conf, Path input, Path clustersIn, Path output,
-    double convergenceDelta, int maxIterations, boolean runClustering, double clusterClassificationThreshold,
+    double convergenceDelta, int maxIterations, boolean runClustering,
     boolean runSequential) throws IOException, InterruptedException, ClassNotFoundException {
     
     // iterate until the clusters converge

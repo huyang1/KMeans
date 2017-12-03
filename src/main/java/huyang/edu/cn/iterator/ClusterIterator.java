@@ -66,6 +66,7 @@ public final class ClusterIterator {
       
       job.setInputFormatClass(SequenceFileInputFormat.class);
       job.setOutputFormatClass(SequenceFileOutputFormat.class);
+
       job.setMapperClass(CIMapper.class);
       job.setReducerClass(CIReducer.class);
       
