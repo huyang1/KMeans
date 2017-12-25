@@ -67,7 +67,7 @@ public class KMeansClusteringPolicy implements ClusteringPolicy {
     int i = 0;
     Vector<Double> pdfs = new DenseVector(models.size());
     for (Cluster model : models) {
-      pdfs.set(i++, model.pdf(new VectorWritable((sampleVector) data)));
+      pdfs.set(i++, model.pdf(new VectorWritable(data)));
     }
     return pdfs.divide(pdfs.zSum());//归一化
   }

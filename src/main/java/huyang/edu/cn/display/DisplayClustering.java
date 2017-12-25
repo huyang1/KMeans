@@ -12,7 +12,6 @@ import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -240,17 +239,17 @@ public class DisplayClustering {
       e.printStackTrace();
     }
   }
-  
+
   protected static List<Cluster> readClustersWritable(Path clustersIn) {
     List<Cluster> clusters = new ArrayList<>();
     Configuration conf = new Configuration();
     for (ClusterWritable value : new SequenceFileDirValueIterable<ClusterWritable>(clustersIn, PathType.LIST,
-        PathFilters.logsCRCFilter(), conf)) {
+            PathFilters.logsCRCFilter(), conf)) {
       Cluster cluster = value.getValue();
       log.info(
-          "Reading Cluster:{} center:{} numPoints:{} radius:{}",
-          cluster.getId(), cluster.getCenter(),
-          cluster.getNumObservations(), cluster.getRadius(), null);
+              "Reading Cluster:{} center:{} numPoints:{} radius:{}",
+              cluster.getId(), cluster.getCenter(),
+              cluster.getNumObservations(), cluster.getRadius());
       clusters.add(cluster);
     }
     return clusters;

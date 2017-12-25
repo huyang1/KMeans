@@ -52,6 +52,12 @@ public class AbstractJob extends Configured implements Tool{
             argMap.put("convergenceDelta",cmd.getOptionValue("delta"));
         } else if (cmd.hasOption("it")) {
             argMap.put("maxIterations",cmd.getOptionValue("it"));
+        } else if (cmd.hasOption("c")) {
+            argMap.put("useCanopy",cmd.getOptionValue("c"));
+        } else if (cmd.hasOption("t1")) {
+            argMap.put("T1",cmd.getOptionValue("t1"));
+        } else if (cmd.hasOption("t2")) {
+            argMap.put("T2",cmd.getOptionValue("t2"));
         }
         if (argMap.size()==1 && argMap.containsKey("help")) {
             System.out.printf("%-8s%-25s","  -"+options.getOption("h").getOpt(),options.getOption("h").getLongOpt());
@@ -66,6 +72,12 @@ public class AbstractJob extends Configured implements Tool{
             System.out.println(options.getOption("delta").getDescription());
             System.out.printf("%-8s%-25s","  -"+options.getOption("it").getOpt(),options.getOption("it").getLongOpt());
             System.out.println(options.getOption("it").getDescription());
+            System.out.printf("%-8s%-25s","  -"+options.getOption("c").getOpt(),options.getOption("c").getLongOpt());
+            System.out.println(options.getOption("c").getDescription());
+            System.out.printf("%-8s%-25s","  -"+options.getOption("t1").getOpt(),options.getOption("t1").getLongOpt());
+            System.out.println(options.getOption("t1").getDescription());
+            System.out.printf("%-8s%-25s","  -"+options.getOption("t2").getOpt(),options.getOption("t2").getLongOpt());
+            System.out.println(options.getOption("t2").getDescription());
         }
         return argMap;
 

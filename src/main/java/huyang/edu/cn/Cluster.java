@@ -96,6 +96,4 @@ public interface Cluster extends Writable {
    * @return
    */
   double pdf(VectorWritable x);
-
-
 }

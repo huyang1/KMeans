@@ -227,6 +227,11 @@ public class CanopyCluster implements Cluster,Writable {
         this.setS2(VectorWritable.readVector(in));
     }
 
+    /**
+     * 计算上次中心与这次中心的偏移阈值
+     * @param convergenceDelta
+     * @return
+     */
     public boolean calculateConvergence(double convergenceDelta) {
         Vector vector = computeCentroid();
         this.converged = getMeasure().distance(vector, getCenter()) <= convergenceDelta;

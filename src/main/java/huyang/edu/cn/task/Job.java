@@ -27,7 +27,7 @@ public class Job extends AbstractJob{
             log.info("Running with only user-supplied arguments");
             ToolRunner.run(new Configuration(), new Job(), args);
         } else {
-            log.info("Running whit default arguments");
+            log.info("Running with default arguments");
             Path output = new Path("output");
             Configuration conf  = new Configuration();
             HadoopUtil.delete(conf, output);
@@ -44,28 +44,39 @@ public class Job extends AbstractJob{
         displayClustering.writeSampleData(directoryContainingConvertedInput);
         log.info("Running random seed to get initial clusters");
         Path clusters = new Path(output, "random-generator-seeds");
-        //clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
-        clusters = Canopy.run(conf,directoryContainingConvertedInput,clusters,measure,3.0,1.5);
+        clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
         log.info("Running KMeans with k = {}", k);
-        KMeansDriver.run(conf, directoryContainingConvertedInput, clusters, output, convergenceDelta, maxIterations, true, 0.0, false);
+        KMeansDriver.run(conf, directoryContainingConvertedInput, clusters, output, convergenceDelta, maxIterations,true,  false);
         displayClustering.loadClustersWritable(output);
         displayClustering.disPlay();
     }
 
     public static void run(Configuration conf, Path input, Path output, DistanceMeasure measure, int k,
-                           double convergenceDelta, int maxIterations) throws Exception {
+                           double convergenceDelta, int maxIterations, boolean useCanopy, double t1, double t2) throws Exception {
         HadoopUtil.delete(conf, output);
         Path directoryContainingConvertedInput = new Path(output, DIRECTORY_CONTAINING_CONVERTED_INPUT);
         log.info("Preparing Input");
         HadoopUtil.delete(conf, directoryContainingConvertedInput);
-        InputDriver.runJob(input, directoryContainingConvertedInput, "org.apache.mahout.math.RandomAccessSparseVector");//将输入文件序列化
+        DisplayClustering displayClustering = new DisplayClustering();
+        if(input==null) {
+            displayClustering.generateSamples();
+            displayClustering.writeSampleData(directoryContainingConvertedInput);
+        } else {
+            InputDriver.runJob(input, directoryContainingConvertedInput, "org.apache.mahout.math.RandomAccessSparseVector");//将输入文件序列化
+        }
         log.info("Running random seed to get initial clusters");
         Path clusters = new Path(output, "random-generator-seeds");
-        clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
-        //use canopy generator seeds
-        clusters = Canopy.run(conf,directoryContainingConvertedInput,clusters,measure,3.0,1.5);
-        log.info("Running KMeans with k = {}", k);
-        KMeansDriver.run(conf, directoryContainingConvertedInput, clusters, output, convergenceDelta, maxIterations, true, 0.0, false);
+        if (useCanopy) {
+            clusters = Canopy.run(conf,directoryContainingConvertedInput,clusters,measure,t1,t2);
+        } else {
+            clusters = RandomSeedGenerator.buildRandom(conf, directoryContainingConvertedInput, clusters, k, measure);
+        }
+        log.info("Running KMeans with k generator by canopy");
+        KMeansDriver.run(conf, directoryContainingConvertedInput, clusters, output, convergenceDelta, maxIterations, true,false);
+        if(input==null) {
+            displayClustering.loadClustersWritable(output);
+            displayClustering.disPlay();
+        }
     }
 
     @Override
@@ -79,11 +90,17 @@ public class Job extends AbstractJob{
         addOption("convergenceDelta","delta","KMeans convergenceDelta number if not," +
                 "convergenceDelta default 0.001");
         addOption("maxIterations","it","Kmeans max iterations, default is 10");
+        addOption("useCanopy","c","default is not use canopy generator seed");
+        addOption("T1","t1","default is 3.0");
+        addOption("T2","t2","default is 1.0");
         Path inputPath;
         Path outputPath;
         int k;
         double convergenceDelta;
         int maxIterations;
+        boolean useCanopy;
+        double T1;
+        double T2;
 
         Map<String,String> argMap = parseArguments(args);
         if (argMap == null) {
@@ -94,7 +111,7 @@ public class Job extends AbstractJob{
         if(argMap.containsKey("inputPath")) {
             inputPath = new Path(argMap.get("inputPath"));
         } else {
-            inputPath = new Path("testdata");
+            inputPath = null;
         }
         if(argMap.containsKey("outputPath")) {
             outputPath = new Path(argMap.get("outputPath"));
@@ -116,7 +133,22 @@ public class Job extends AbstractJob{
         } else {
             maxIterations = 10;
         }
-        run(getConf(), inputPath, outputPath, new EuclideanDistanceMeasure(), k, convergenceDelta, maxIterations);
+        if(argMap.containsKey("useCanopy")) {
+            useCanopy = Boolean.parseBoolean(argMap.get("useCanopy"));
+        } else {
+            useCanopy = false;
+        }
+        if(argMap.containsKey("T1")) {
+            T1 = Integer.parseInt(argMap.get("T1"));
+        } else {
+            T1 = 3.0;
+        }
+        if(argMap.containsKey("T2")) {
+            T2 = Integer.parseInt(argMap.get("T2"));
+        } else {
+            T2 = 1.5;
+        }
+        run(getConf(), inputPath, outputPath, new EuclideanDistanceMeasure(), k, convergenceDelta, maxIterations,useCanopy,T1,T2);
         return 0;
     }
 
